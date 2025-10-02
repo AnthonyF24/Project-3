@@ -22,15 +22,29 @@ def save_state(state):
     tmp.replace(DATA_PATH)
 
 def validate_iso_date(s: str) -> str:
+    # Try DD-MM-YYYY format first
     try:
-        datetime.strptime(s, "%Y-%m-%d")
-        return s
+        parsed_date = datetime.strptime(s, "%d-%m-%Y")
+        return parsed_date.strftime("%Y-%m-%d")  # Convert to ISO format for storage
     except ValueError:
-        raise ValueError("Date must be YYYY-MM-DD")
+        # Fallback to YYYY-MM-DD for backward compatibility
+        try:
+            datetime.strptime(s, "%Y-%m-%d")
+            return s
+        except ValueError:
+            raise ValueError("Date must be DD-MM-YYYY or YYYY-MM-DD")
 
 def month_key(d: str) -> str:
     # d is YYYY-MM-DD
     return d[:7]
+
+def format_date_for_display(iso_date: str) -> str:
+    """Convert YYYY-MM-DD to DD-MM-YYYY for display"""
+    try:
+        parsed_date = datetime.strptime(iso_date, "%Y-%m-%d")
+        return parsed_date.strftime("%d-%m-%Y")
+    except ValueError:
+        return iso_date  # Return as-is if parsing fails
 
 def get_budget_map(state, month):
     for b in state["budgets"]:
@@ -93,6 +107,10 @@ def list_transactions():
     if q:
         txs = [t for t in txs if q in t.get("description", "").lower()]
 
+    # Format dates for display
+    for tx in txs:
+        tx["date"] = format_date_for_display(tx["date"])
+
     return jsonify({"transactions": txs})
 
 @app.post("/api/transactions")
@@ -137,6 +155,9 @@ def add_transaction():
 
     state["transactions"].append(tx)
     save_state(state)
+    
+    # Format the date for the response
+    tx["date"] = format_date_for_display(tx["date"])
     return jsonify({"ok": True, "transaction": tx}), 201
 
 # --- Reports ---
