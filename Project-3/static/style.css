@@ -1,0 +1,14 @@
+* { box-sizing: border-box; font-family: system-ui, sans-serif; }
+body { margin: 0; background: #0f1115; color: #e6e9ef; }
+.container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+h1 { margin-bottom: 1rem; }
+.panel { background: #151822; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid #23283b; }
+.row { display: flex; gap: .5rem; align-items: center; margin-bottom: .5rem; }
+.grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; margin-bottom: .5rem; }
+input, select, button { padding: .6rem .7rem; border-radius: 8px; border: 1px solid #2b3047; background: #0f1320; color: #e6e9ef; }
+button { background: #2c7be5; border-color: #2c7be5; cursor: pointer; }
+button:hover { filter: brightness(1.1); }
+.msg { margin-top: .4rem; min-height: 1.2rem; color: #9cc4ff; }
+#tx-table { width: 100%; border-collapse: collapse; }
+#tx-table th, #tx-table td { border-bottom: 1px solid #23283b; padding: .5rem; text-align: left; }
+#budgets .row { margin-bottom: .3rem; }
